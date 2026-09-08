@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import random
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -9,126 +10,209 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- MOBILE-FIRST GLASSMORPHISM CSS ---
+# --- ULTRA-LUXURY WHITE GLASSMORPHISM CSS ---
 st.markdown("""
 <style>
-    /* Global Base */
+    /* Global Base Styling */
     html, body, [class*="css"] {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
     }
     .stApp {
-        background-color: #f7f7f8;
-        color: #1c1c1e;
+        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        color: #1d1d1f;
     }
 
-    /* Hide Streamlit Header/Footer */
+    /* Hide Streamlit Default Elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Mobile Container Padding Adjustment */
+    /* Mobile-First Layout Adjustment */
     .block-container {
         padding-top: 1.5rem !important;
         padding-bottom: 2rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
-        max-width: 500px !important;
+        max-width: 480px !important;
     }
 
-    /* Glassmorphic Cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+    /* Premium Glassmorphic Cards */
+    .glass-card-watermark {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.9);
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        border-radius: 20px;
+        padding: 18px 20px;
+        margin-bottom: 14px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
     }
 
-    /* Titles */
+    /* Background Watermark Logo */
+    .card-watermark-bg {
+        position: absolute;
+        right: -10px;
+        bottom: -15px;
+        font-size: 65px;
+        opacity: 0.07;
+        pointer-events: none;
+        user-select: none;
+        filter: grayscale(30%);
+    }
+
+    /* Headers */
     .main-title {
-        font-size: 26px;
-        font-weight: 700;
+        font-size: 28px;
+        font-weight: 800;
         text-align: center;
-        color: #1c1c1e;
+        color: #1d1d1f;
         margin-bottom: 2px;
+        letter-spacing: -0.5px;
     }
     .sub-title {
         font-size: 13px;
         text-align: center;
-        color: #8e8e93;
-        margin-bottom: 20px;
+        color: #86868b;
+        margin-bottom: 22px;
         font-style: italic;
+        font-weight: 400;
     }
 
-    /* Tags */
+    /* Champagne/Gold Glass Accent Tags */
     .prediction-tag {
         display: inline-block;
-        background-color: #f4efe6;
+        background: rgba(244, 239, 230, 0.85);
         color: #8a6d3b;
         font-size: 11px;
-        font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-        border: 0.5px solid #e2d7c5;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border: 0.5px solid rgba(226, 215, 197, 0.8);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.6px;
     }
 
-    /* Prediction Text */
+    /* Prediction Body Text */
     .prediction-text {
         font-size: 14px;
         color: #2c2c2e;
-        line-height: 1.4;
+        line-height: 1.5;
         font-weight: 400;
-        word-wrap: break-word;
+        position: relative;
+        z-index: 2;
     }
 
-    /* Streamlit Button Styling */
+    /* Inputs Mobile Styling */
+    div[data-baseweb="input"] {
+        border-radius: 14px !important;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid rgba(210, 210, 215, 0.8) !important;
+    }
+
+    /* Luxury Button */
     .stButton > button {
         width: 100%;
-        background-color: #1c1c1e;
+        background: linear-gradient(180deg, #2c2c2e 0%, #111112 100%);
         color: #ffffff;
         border: none;
-        padding: 12px 16px;
-        border-radius: 12px;
+        padding: 14px 20px;
+        border-radius: 16px;
         font-size: 15px;
         font-weight: 600;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
         transition: all 0.2s ease;
     }
     .stButton > button:active {
         transform: scale(0.98);
     }
 
-    /* Inputs Mobile Styling */
-    div[data-baseweb="input"] {
-        border-radius: 10px !important;
+    /* Custom Loading Text & Bars */
+    .loading-text {
+        text-align: center;
+        color: #424245;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+    .loading-bar-text {
+        text-align: center;
+        font-family: monospace;
+        color: #1d1d1f;
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
     }
 
-    /* Ending Text */
+    /* Random Warning Box */
+    .warning-box {
+        background: rgba(255, 243, 205, 0.7);
+        border: 1px solid rgba(255, 226, 143, 0.9);
+        border-radius: 14px;
+        padding: 12px;
+        color: #856404;
+        font-size: 13px;
+        text-align: center;
+        margin-top: 15px;
+        font-weight: 500;
+    }
+
+    /* Ending Container */
     .ending-container {
         text-align: center;
-        padding: 15px 0;
-        color: #636366;
+        padding: 16px 0;
+        color: #6e6e73;
         font-size: 14px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- TAGS ---
+# --- TAGS WITH WATERMARK LOGOS ---
 TAGS = [
-    "🧠 Personality",
-    "📚 Study",
-    "💰 Money",
-    "👥 Friendship",
-    "😂 Habits",
-    "🚀 Career",
-    "⚡ Secret Skill",
-    "🔮 Final Future"
+    ("🧠 Personality", "🧠"),
+    ("📚 Study", "📚"),
+    ("💰 Money", "💰"),
+    ("👥 Friendship", "👥"),
+    ("😂 Habits", "😂"),
+    ("🚀 Career", "🚀"),
+    ("⚡ Secret Skill", "⚡"),
+    ("🔮 Final Future", "🔮")
+]
+
+# --- LOADING MESSAGES POOL ---
+LOADING_POOL = [
+    "🧠 Brain cells ko assemble kiya ja raha hai...",
+    "🔍 Future ki talaash jaari hai...",
+    "📡 NASA se permission li ja rahi hai...",
+    "🧙‍♂️ Ancient Future Mantra activate...",
+    "🔮 Crystal ball ko restart kiya ja raha hai...",
+    "📚 11th class ki kitab se future decode ho raha hai...",
+    "💀 Future dekh ke system shock mein chala gaya...",
+    "☁️ Cloud se future download ho raha hai...",
+    "🧮 1% calculation... 99% bakchodi...",
+    "👽 Alien database se confirmation li ja rahi hai...",
+    "⚡ Karma server se response aa raha hai...",
+    "🕉️ Om Bhavishyaya Namah...",
+    "🙏 Bhagwan se future verify kiya ja raha hai...",
+    "🚨 Future thoda dangerous lag raha hai...",
+    "🤫 Jo dikh raha hai woh kisi ko mat batana...",
+    "💾 Future permanently save kiya ja raha hai...",
+    "🔐 Future ko edit karne ki permission DENIED...",
+    "⏳ 99%... bas ek aur jhooth bolna baaki hai...",
+    "😂 Predictor khud future ko samajhne ki koshish kar raha hai..."
+]
+
+# --- RANDOM WARNING POOL ---
+WARNING_POOL = [
+    "⚠️ Warning: Aapka future dekhna system ke liye bhi shocking tha. 😂",
+    "⚠️ Warning: Is future ko sach manne par dimaag kharab ho sakta hai! 😂",
+    "⚠️ Warning: Future mein bohot zyada bakchodi detect hui hai. 🚨",
+    "⚠️ Warning: Is prediction ko apne gharwalon se chhupaye rakhein! 🤫",
+    "⚠️ Warning: Timeline collapse hone ke 99% chances hain. 😂",
+    "⚠️ Warning: Over-confidence se bachein, karma kabhi bhi palat sakta hai! ⚡"
 ]
 
 # --- 15 FRIENDS DATABASE (15 x 8 UNIQUE PREDICTIONS) ---
@@ -289,8 +373,8 @@ FRIENDS_DATABASE = {
 st.markdown("<div class='main-title'>🔮 Future Predictor</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>“Your future has already been recorded.”</div>", unsafe_allow_html=True)
 
-# Input Section
-st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+# Input Section inside Glass Card
+st.markdown("<div class='glass-card-watermark'>", unsafe_allow_html=True)
 user_name = st.text_input("ENTER YOUR NAME", placeholder="Type your name...", key="name_in")
 user_age = st.number_input("ENTER YOUR AGE", min_value=1, max_value=120, value=20, step=1, key="age_in")
 submit_button = st.button("Reveal My Future ✦")
@@ -303,66 +387,71 @@ if submit_button:
     else:
         clean_name = user_name.strip().lower()
 
-        # Loading animation
-        loading_placeholder = st.empty()
-        progress_bar = st.progress(0)
-
-        loading_messages = [
-            "Identifying subject...",
-            "Searching the Future Archive...",
-            "Consulting the ancient database...",
-            "Checking destiny...",
-            "Cross-checking the timeline...",
-            "Finalizing the prediction...",
-            "Future locked...",
-            "Prediction ready..."
+        # Pick 3 to 4 random loading messages from pool
+        selected_loading_msgs = random.sample(LOADING_POOL, random.randint(3, 4))
+        
+        # Custom loading visual blocks
+        progress_blocks = [
+            "█ 25%",
+            "██ █ 50%",
+            "██ █ ██ 75%",
+            "██ █ ██ █ 100%"
         ]
 
-        step_delay = 1.8 / len(loading_messages)
-        for idx, msg in enumerate(loading_messages):
-            loading_placeholder.markdown(f"<p style='text-align: center; color: #8e8e93; font-size: 13px;'>{msg}</p>", unsafe_allow_html=True)
-            progress_bar.progress((idx + 1) / len(loading_messages))
-            time.sleep(step_delay)
+        loading_placeholder = st.empty()
+        bar_placeholder = st.empty()
 
+        # Animated Fast Loading (~2 seconds total)
+        for idx, msg in enumerate(selected_loading_msgs):
+            loading_placeholder.markdown(f"<div class='loading-text'>{msg}</div>", unsafe_allow_html=True)
+            block_idx = min(idx, len(progress_blocks) - 1)
+            bar_placeholder.markdown(f"<div class='loading-bar-text'>{progress_blocks[block_idx]}</div>", unsafe_allow_html=True)
+            time.sleep(0.5)
+
+        # Clear loading UI
         loading_placeholder.empty()
-        progress_bar.empty()
+        bar_placeholder.empty()
 
         # Database Check
         if clean_name in FRIENDS_DATABASE:
             predictions = FRIENDS_DATABASE[clean_name]
 
-            st.markdown("<div class='glass-card' style='text-align: center;'>", unsafe_allow_html=True)
-            st.markdown("<h3 style='margin:0; font-size:20px;'>🔮 Your Future</h3>", unsafe_allow_html=True)
-            st.markdown("<span style='color: #8e8e93; font-size: 12px;'>The Future Archive has revealed your recorded future.</span>", unsafe_allow_html=True)
+            st.markdown("<div class='glass-card-watermark' style='text-align: center;'>", unsafe_allow_html=True)
+            st.markdown("<h3 style='margin:0; font-size:20px; font-weight:700;'>🔮 Your Future</h3>", unsafe_allow_html=True)
+            st.markdown("<span style='color: #86868b; font-size: 12px;'>The Future Archive has revealed your recorded future.</span>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Display all 8 predictions
-            for tag, pred_text in zip(TAGS, predictions):
+            # Display all 8 predictions with background watermarks
+            for (tag, logo), pred_text in zip(TAGS, predictions):
                 st.markdown(f"""
-                <div class='glass-card'>
+                <div class='glass-card-watermark'>
+                    <div class='card-watermark-bg'>{logo}</div>
                     <div class='prediction-tag'>{tag}</div>
                     <div class='prediction-text'>{pred_text}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
-            # Ending
+            # Dynamic Warning Box
+            random_warning = random.choice(WARNING_POOL)
+            st.markdown(f"<div class='warning-box'>{random_warning}</div>", unsafe_allow_html=True)
+
+            # Ending Section
             st.markdown("""
             <div class='ending-container'>
                 <p style='margin-bottom: 2px;'>Aapka future ye raha. ✨</p>
-                <p style='font-weight: 600; color: #1c1c1e;'>Milte hain future mein. 👋🔮</p>
+                <p style='font-weight: 700; color: #1d1d1f;'>Milte hain future mein. 👋🔮</p>
             </div>
             """, unsafe_allow_html=True)
 
         else:
-            # Unknown Name
+            # Unknown Name Response
             st.markdown("""
-            <div class='glass-card' style='text-align: center; padding: 24px;'>
-                <h3 style='margin-top:0;'>🔮 Future Archive</h3>
+            <div class='glass-card-watermark' style='text-align: center; padding: 24px;'>
+                <h3 style='margin-top:0; font-size:20px;'>🔮 Future Archive</h3>
                 <p style='color: #3a3a3c; font-size: 14px; line-height: 1.5;'>
                     Future Archive ko is naam ka record nahi mila.<br><br>
                     Lagta hai iska future abhi secret rakha gaya hai. 😂
                 </p>
             </div>
             """, unsafe_allow_html=True)
-
-
+        
