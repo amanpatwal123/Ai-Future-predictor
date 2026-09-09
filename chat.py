@@ -376,7 +376,7 @@ st.markdown("<div class='sub-title'>“Your future has already been recorded.”
 # Input Section inside Glass Card
 st.markdown("<div class='glass-card-watermark'>", unsafe_allow_html=True)
 user_name = st.text_input("ENTER YOUR NAME", placeholder="Type your name...", key="name_in")
-user_age = st.number_input("ENTER YOUR AGE", min_value=1, max_value=120, value=20, step=1, key="age_in")
+user_age = st.number_input("ENTER YOUR AGE", min_value=1, max_value=120, value=00, step=1, key="age_in")
 submit_button = st.button("Reveal My Future ✦")
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -393,9 +393,9 @@ if submit_button:
         # Custom loading visual blocks
         progress_blocks = [
             "█ 25%",
-            "██ █ 50%",
-            "██ █ ██ 75%",
-            "██ █ ██ █ 100%"
+            "███ 50%",
+            "████ 75%",
+            "██████ 100%"
         ]
 
         loading_placeholder = st.empty()
@@ -449,7 +449,7 @@ if submit_button:
             <div class='glass-card-watermark' style='text-align: center; padding: 24px;'>
                 <h3 style='margin-top:0; font-size:20px;'>🔮 Future Archive</h3>
                 <p style='color: #3a3a3c; font-size: 14px; line-height: 1.5;'>
-                    Future Archive ko is naam ka record nahi mila.<br><br>
+                     Naam ka record nahi mila kripya pandit se khekrr naam badle.<br><br>
                     Lagta hai iska future abhi secret rakha gaya hai. 😂
                 </p>
             </div>
